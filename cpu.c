@@ -22,7 +22,8 @@ cpu_setup(){
     if(i>=ncpu)
         return -1;
 
-    cpus[i].apic_id = (get_lapic_id() >> 24) & 0xf;
+    /* assume Pentium 4, Xeon, or later processors */
+    cpus[i].apic_id = (get_lapic_id() >> 24) & 0xff;
     cpus[i].flags |= CPU_ENABLE;
 
     return 0;

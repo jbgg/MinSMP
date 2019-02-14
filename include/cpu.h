@@ -5,7 +5,10 @@
 #include <types.h>
 
 
-#define NCPU 128
+/* assume Pentium 4, Xeon, or later processors
+ * where APIC ID is 8 bits wide
+ */
+#define NCPU 255
 
 
 struct cpu {
