@@ -1,15 +1,16 @@
 
+
 #include <mp.h>
 #include <cpu.h>
 #include <lapic.h>
 #include <ioapic.h>
+#include <pit.h>
 #include <video.h>
 #include <list.h>
 #include <mem.h>
 
 
 #define AP_BOOT_ADDR (0x7000)
-
 
 
 extern uint32 nioapic;
@@ -33,78 +34,52 @@ mp_setup(){
 
     /* setup BSP processor */
     cpus[i].stack_base = &stack_bsp;
-    /* debug
-    printf("DEBUG: cpus[0].stack_bsp = %x\n", cpus[0].stack_base);
-    */
+
     if(cpu_setup())
         return -1;
 
     /* setup bootstrap code for ap processors */
-    /* debug
-    printf("DEBUG: &apboot = %x, &apbootend = %x, size=%x\n", (void*)&apboot, (void*)&apbootend, (void*)&apbootend - (void*)&apboot);
-    */
-    memcpy((void*)AP_BOOT_ADDR, (void*)&apboot, (uint32)&apbootend - (uint32)&apboot);
-
-
-    
-    
+    memcpy((void*)AP_BOOT_ADDR, (void*)&apboot,
+            (uint32)&apbootend - (uint32)&apboot);
 
     i++;
 
     for(/*i=1*/;i<ncpu;i++){
+
         /* allocating stack */
 #define STACK_SIZE (4096 * 2)
         *stack_ptr = malloc(STACK_SIZE);
         cpus[i].stack_base = *stack_ptr;
-        /* debug
-           printf("DEBUG: &stack_ptr = %x, stack_ptr = %x\n", &stack_ptr, stack_ptr);
-           */
         uint32 apic_id = cpus[i].apic_id;
-
-        /* debug
-        printf("DEBUG: apic_id = %x\n", apic_id);
-        */
-        /* debug
-        printf("DEBUG: &lapic->icr_low = %x, &lapic->icr_high = %x\n", &lapic->icr_low, &lapic->icr_high);
-        */
-
 
         /* ipi init assert */
         lapic->icr_high = (apic_id << 24);
         lapic->icr_low = (1 << 15) | (1 << 14) | (5 << 8);
-        //printf("id: %x\n", lapic->apic_id);
         dummyf(lapic->apic_id);
+        pit_delay(1);
 
-        // delay(200);
         /* ipi init deassert */
         lapic->icr_low = (1 << 15) | (5 << 8);
         dummyf(lapic->apic_id);
+        pit_delay(10);
 
-        // delay(10000);
         /* ipi startup */
         lapic->icr_high = (apic_id << 24);
         lapic->icr_low = (6 << 8) | ((AP_BOOT_ADDR >> 12) & 0xff);
         dummyf(lapic->apic_id);
-
-        // delay(200);
+        pit_delay(1);
+        
         /* ipi startup */
         lapic->icr_high = (apic_id << 24);
         lapic->icr_low = (6 << 8) | ((AP_BOOT_ADDR >> 12) & 0xff);
         dummyf(lapic->apic_id);
-
-        // delay(200);
-
+        pit_delay(1);
 
         volatile uint32 *flags_p = &cpus[i].flags;
         while((*flags_p & CPU_ENABLE) == 0)
             ;
 
-
-
-
     }
-
-
 
     return 0;
 }
@@ -135,8 +110,6 @@ mp_print_info(){
                 ioapic->apic_id, ioapic->addr,
                 ioapic->base);
     }
-
-
 
 }
 

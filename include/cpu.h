@@ -1,14 +1,12 @@
 
 
 #ifndef __CPU_H__
+#define __CPU_H__
 
 #include <types.h>
 
 
-/* assume Pentium 4, Xeon, or later processors
- * where APIC ID is 8 bits wide
- */
-#define NCPU 255
+#define NCPU 128
 
 
 struct cpu {
@@ -25,12 +23,6 @@ extern struct cpu cpus[NCPU];
 int cpu_setup();
 
 void cpu_ap_main();
-
-
-
-
-
-
 
 
 #endif /* __CPU_H__ */

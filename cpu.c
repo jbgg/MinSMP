@@ -1,4 +1,5 @@
 
+
 #include <cpu.h>
 #include <mp.h>
 #include <lapic.h>
@@ -8,7 +9,6 @@
 
 int ncpu;
 struct cpu cpus[NCPU];
-
 
 
 int
@@ -22,19 +22,15 @@ cpu_setup(){
     if(i>=ncpu)
         return -1;
 
-    /* assume Pentium 4, Xeon, or later processors */
-    cpus[i].apic_id = (get_lapic_id() >> 24) & 0xff;
+    cpus[i].apic_id = (get_lapic_id() >> 24) & 0xf;
     cpus[i].flags |= CPU_ENABLE;
 
     return 0;
 }
 
 
-
-
 void
 cpu_ap_main(){
-
 
     if(cpu_setup())
         goto idle;
@@ -42,9 +38,7 @@ cpu_ap_main(){
 idle:
     for(;;)
         asm volatile("hlt");
-
 }
-
 
 
 

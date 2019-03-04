@@ -1,6 +1,5 @@
 
 
-
 #include <video.h>
 #include <types.h>
 #include <asm.h>
@@ -37,7 +36,6 @@ video_setup(){
     row=0;
 
     setcursor();
-
 }
 
 
@@ -189,6 +187,5 @@ printf(char *fmt, ...){
     }
 
     setcursor();
-
 }
 

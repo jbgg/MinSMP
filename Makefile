@@ -3,7 +3,7 @@ KERNEL_ADDR=0x01000000
 
 PROG=minsmp
 
-OBJ= boot.o main.o video.o mem.o acpi.o cpu.o mp.o lapic.o ioapic.o
+OBJ= boot.o main.o video.o mem.o acpi.o cpu.o mp.o lapic.o ioapic.o pit.o
 
 S=.
 

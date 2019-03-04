@@ -47,6 +47,4 @@ list_insert_tail(struct list *list, struct list *node){
 
 
 
-
-
 #endif /* __LIST_H__ */

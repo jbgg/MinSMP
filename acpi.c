@@ -1,6 +1,5 @@
 
 
-
 #include <acpi.h>
 #include <mem.h>
 #include <video.h>
@@ -20,9 +19,6 @@ static int acpi_check_rsdt(struct acpi_rsdt *);
 static int acpi_get_rsdt();
 
 static int acpi_apic_setup();
-/*extern int ncpu; */
-/* extern uint32 lapic; */
-/*extern struct cpu cpus[]; */
 
 extern int nioapic;
 extern struct list ioapics;
@@ -30,7 +26,6 @@ extern struct list ioapics;
 
 int
 acpi_setup(){
-
 
     if(acpi_get_rsdp() || rsdp==0)
         return -1;
@@ -52,8 +47,6 @@ acpi_setup(){
 
     if(acpi_apic_setup())
         return -1;
-
-
 
     return 0;
 }
@@ -91,7 +84,6 @@ acpi_checksum(void *addr, uint32 length){
 static int
 acpi_check_rsdp(struct acpi_rsdp *rsdp){
 
-
     if(memcmp(rsdp->signature, ACPI_RSDP_SIG, sizeof(rsdp->signature)) != 0)
         return -1;
 
@@ -121,13 +113,11 @@ acpi_search_rsdp(void *addr, uint32 length){
 
     }
 
-
     return -1;
 }
 
 static int
 acpi_get_rsdp(){
-
 
     uint32 base = 0x0;
 
@@ -181,7 +171,6 @@ acpi_apic_setup(){
     if(acpi_checksum(apic, apic->header.length))
         return -1;
 
-
     ncpu = 0;
     nioapic = 0;
     lapic = (struct lapic*) (apic->lapic_addr);
@@ -211,7 +200,6 @@ acpi_apic_setup(){
                 ioapic_last->addr = ioapic_entry->addr;
                 ioapic_last->base = ioapic_entry->base;
 
-
                 list_insert_tail(&ioapics, &ioapic_last->node);
 
                 nioapic++;
@@ -222,10 +210,9 @@ acpi_apic_setup(){
                 + apic_entry->length);
     }
 
-
     if(ncpu == 0 || nioapic == 0)
         return -1;
 
-
     return 0;
 }
+

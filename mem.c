@@ -1,6 +1,5 @@
 
 
-
 #include <mem.h>
 
 
@@ -10,10 +9,7 @@ void *last;
 
 void
 mem_setup(){
-
     last = (void*) ( (((uint32)&_end + 0x10 - 1 ) / 0x10) * 0x10 );
-
-
 }
 
 

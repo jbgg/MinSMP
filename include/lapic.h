@@ -1,6 +1,5 @@
 
 
-
 #ifndef __LAPIC_H__
 #define __LAPIC_H__
 
@@ -137,8 +136,6 @@ get_lapic_id(){
     return lapic->apic_id;
 
 }
-
-
 
 
 #endif /* __LAPIC_H__ */
