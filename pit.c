@@ -20,7 +20,7 @@ pit_setup(){
 void
 pit_delay(uint32 ms){
 
-    uint16 counter, prev;
+    uint16 prev, diff;
     uint8 low, high;
 
     outb((1 << 6), 0x43);
@@ -33,8 +33,10 @@ pit_delay(uint32 ms){
             outb((1 << 6), 0x43);
             inb(0x41, low);
             inb(0x41, high);
-            counter = ((high & 0xff) << 8) | (low & 0xff);
-        }while((prev - counter) <= 0x254);
+            diff = prev - (((high & 0xff) << 8) | (low & 0xff));
+            if(diff <= 0)
+                diff += 0x4a9;
+        }while(diff <= 0x254);
 
         /* half ms */
 
@@ -42,8 +44,10 @@ pit_delay(uint32 ms){
             outb((1 << 6), 0x43);
             inb(0x41, low);
             inb(0x41, high);
-            counter = ((high & 0xff) << 8) | (low & 0xff);
-        }while((prev - counter) >= 0x254);
+            diff = prev - (((high & 0xff) << 8) | (low & 0xff));
+            if(diff <= 0)
+                diff += 0x4a9;
+        }while(diff >= 0x254);
 
         ms--;
     }
